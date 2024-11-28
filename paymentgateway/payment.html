@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donate to Support Us</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .qr-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+  <h1>Donate to Support Us</h1>
+  <input type="text" id="upiId" placeholder="Enter UPI ID" />
+  <button id="donateButton">Donate</button>
+  <div id="qrContainer" class="qr-container" style="display: none;">
+    <p>Scan this QR code to pay:</p>
+    <canvas id="qrCode"></canvas>
+  </div>
+
+  <script>
+    document.getElementById("donateButton").addEventListener("click", function () {
+      const upiId = document.getElementById("upiId").value.trim();
+
+      if (upiId === "") {
+        alert("Please enter a valid UPI ID");
+        return;
+      }
+
+      const upiUrl = `upi://pay?pa=${upiId}&pn=User&cu=INR`;
+
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // Redirect to UPI app on mobile
+        window.location.href = upiUrl;
+      } else {
+        // Generate QR code for desktop users
+        document.getElementById("qrContainer").style.display = "block";
+        const qrCanvas = document.getElementById("qrCode");
+        QRCode.toCanvas(qrCanvas, upiUrl, { width: 200 }, function (error) {
+          if (error) console.error(error);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
